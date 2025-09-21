@@ -16,6 +16,7 @@ exports.getAllFolder = exports.createFolder = void 0;
 const folder_model_1 = __importDefault(require("../models/folder.model"));
 const createFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const userId = req.user.id;
         const { folderName } = req.body;
         let { parentFolder } = req.query;
         if (parentFolder === "null" || parentFolder === undefined) {
@@ -23,7 +24,8 @@ const createFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         const folder = new folder_model_1.default({
             folderName,
-            parentFolder
+            parentFolder,
+            user: userId
         });
         yield folder.save();
         res.status(201).json({

@@ -5,6 +5,7 @@ import Folder from "../models/folder.model";
 export const createFolder = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
+        const userId = req.user.id;
         const { folderName } = req.body;
         let { parentFolder } = req.query;
 
@@ -14,7 +15,8 @@ export const createFolder = async (req: Request, res: Response, next: NextFuncti
 
         const folder = new Folder({
             folderName,
-            parentFolder
+            parentFolder,
+            user: userId
         })
 
         await folder.save();
