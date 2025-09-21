@@ -12,23 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const auth_route_1 = __importDefault(require("./routes/auth.route"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const dbConnection_1 = require("./config/dbConnection");
-dotenv_1.default.config();
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, cookie_parser_1.default)());
-app.use('/api/auth', auth_route_1.default);
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, dbConnection_1.dbConnection)();
-        app.listen(process.env.PORT, () => {
-            console.log(`Server running on port ${process.env.PORT}`);
-        });
-    });
-}
-main();
+exports.generateToken = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const generateToken = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    return jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET);
+});
+exports.generateToken = generateToken;

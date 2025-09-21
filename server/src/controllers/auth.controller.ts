@@ -3,6 +3,9 @@ import { email, z } from "zod"
 import User from "../models/user.model";
 import bcrypt from "bcrypt"
 
+import jwt from "jsonwebtoken"
+import { generateToken } from "../lib/generateToken";
+
 const userRegisterSchema = z.object({
     username: z.string().min(5, "Atleast 5 character").trim(),
     email: z.string().email("Invalid Email").trim(),
@@ -28,6 +31,7 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
             return
         }
 
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const existedUser = await User.findOne({ email });
@@ -44,12 +48,15 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
             password: hashedPassword
         })
         await user.save();
+        const token = await generateToken({ id: user._id.toString(), email: user.email })
+        res.cookie("token", token)
 
         const { password: _, ...userData } = user.toObject()
 
         res.status(201).json({
             message: "Registeration Successfull",
-            user: userData
+            user: userData,
+            token
         })
         return
 
@@ -94,6 +101,9 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
             })
             return
         }
+
+        const token = await generateToken({ id: userExist._id.toString(), email: userExist.email })
+        res.cookie("token", token);
 
         const { password: _, ...userData } = userExist.toObject()
 
