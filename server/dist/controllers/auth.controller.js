@@ -104,6 +104,8 @@ const userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             });
             return;
         }
+        const token = yield (0, generateToken_1.generateToken)({ id: userExist._id.toString(), email: userExist.email });
+        res.cookie("token", token);
         const _a = userExist.toObject(), { password: _ } = _a, userData = __rest(_a, ["password"]);
         res.status(200).json({
             message: "User Login successfull",
