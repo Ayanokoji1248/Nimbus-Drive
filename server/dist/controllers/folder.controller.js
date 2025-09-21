@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFolder = void 0;
+exports.getAllFolder = exports.createFolder = void 0;
 const folder_model_1 = __importDefault(require("../models/folder.model"));
 const createFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { folderName } = req.body;
-        let { parentFolder } = req.params;
+        let { parentFolder } = req.query;
         if (parentFolder === "null" || parentFolder === undefined) {
             parentFolder = null;
         }
@@ -40,3 +40,23 @@ const createFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.createFolder = createFolder;
+const getAllFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let { parentFolder } = req.query;
+        if (parentFolder === "null" || parentFolder === undefined) {
+            parentFolder = null;
+        }
+        const folders = yield folder_model_1.default.find({ parentFolder });
+        res.status(200).json({
+            folders
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+        return;
+    }
+});
+exports.getAllFolder = getAllFolder;
