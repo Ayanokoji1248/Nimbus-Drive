@@ -12,21 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const auth_route_1 = __importDefault(require("./routes/auth.route"));
-const dbConnection_1 = require("./config/dbConnection");
-dotenv_1.default.config();
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
-app.use('/api/auth', auth_route_1.default);
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, dbConnection_1.dbConnection)();
-        app.listen(process.env.PORT, () => {
-            console.log(`Server running on port ${process.env.PORT}`);
-        });
-    });
-}
-main();
+exports.dbConnection = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+const dbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield mongoose_1.default.connect(process.env.MONGO_URI);
+        console.log("Connected to DB");
+    }
+    catch (error) {
+        console.error("Error connecting in DB", error);
+        process.exit(1);
+    }
+});
+exports.dbConnection = dbConnection;
