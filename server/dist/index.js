@@ -18,11 +18,16 @@ const auth_route_1 = __importDefault(require("./routes/auth.route"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dbConnection_1 = require("./config/dbConnection");
 const folder_route_1 = __importDefault(require("./routes/folder.route"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    credentials: true,
+}));
 app.use('/api/auth', auth_route_1.default);
 app.use('/api/folder', folder_route_1.default);
 function main() {
