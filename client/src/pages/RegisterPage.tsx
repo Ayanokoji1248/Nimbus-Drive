@@ -1,7 +1,29 @@
+import axios from 'axios';
 import { CloudUpload } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { BACKEND_URL } from '../lib';
 
 const RegisterPage = () => {
+
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${BACKEND_URL}/auth/register`, {
+                username,
+                email,
+                password
+            }, { withCredentials: true });
+            console.log(response.data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <div className="w-full h-screen bg-zinc-950 text-white flex justify-center items-center">
             <div className="w-108 flex justify-center items-center py-5 flex-col">
@@ -24,21 +46,21 @@ const RegisterPage = () => {
                     </div>
 
                     <div className='mt-5 w-full'>
-                        <form className='flex flex-col gap-5'>
+                        <form method='POST' onSubmit={handleSubmit} className='flex flex-col gap-5'>
                             <div className='flex flex-col gap-2'>
                                 <label className='text-sm font-medium' htmlFor="username">Username</label>
-                                <input className='w-full p-1.5 outline-none border-[1px] rounded-md border-zinc-700 bg-[#141414] focus-within:border-violet-500 focus-within:border-2 text-sm' type="text" name="username" id="username" placeholder='axelblaze' />
+                                <input value={username} onChange={(e) => setUsername(e.target.value)} className='w-full p-1.5 outline-none border-[1px] rounded-md border-zinc-700 bg-[#141414] focus-within:border-violet-500 focus-within:border-2 text-sm' type="text" name="username" id="username" placeholder='axelblaze' />
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <label className='text-sm font-medium' htmlFor="email">Email</label>
-                                <input className='w-full p-1.5 outline-none border-[1px] rounded-md border-zinc-700 bg-[#141414] focus-within:border-violet-500 focus-within:border-2 text-sm' type="email" name="email" id="email" placeholder='axel12@gmail.com' />
+                                <input value={email} onChange={(e) => setEmail(e.target.value)} className='w-full p-1.5 outline-none border-[1px] rounded-md border-zinc-700 bg-[#141414] focus-within:border-violet-500 focus-within:border-2 text-sm' type="email" name="email" id="email" placeholder='axel12@gmail.com' />
                             </div>
                             <div className='flex flex-col gap-2'>
                                 <label className='text-sm font-medium' htmlFor="password">Password</label>
-                                <input className='w-full p-1.5 outline-none border-[1px] rounded-md border-zinc-700 bg-[#141414] focus-within:border-violet-500 focus-within:border-2 text-sm' type="password" name="password" id="password" placeholder='******' />
+                                <input value={password} onChange={(e) => setPassword(e.target.value)} className='w-full p-1.5 outline-none border-[1px] rounded-md border-zinc-700 bg-[#141414] focus-within:border-violet-500 focus-within:border-2 text-sm' type="password" name="password" id="password" placeholder='******' />
                             </div>
 
-                            <button className='bg-violet-500 p-2 rounded-md font-semibold text-sm'>Sign In</button>
+                            <button type='submit' className='bg-violet-500 p-2 rounded-md font-semibold text-sm'>Sign In</button>
                         </form>
                     </div>
 

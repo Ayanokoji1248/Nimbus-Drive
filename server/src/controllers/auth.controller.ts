@@ -56,7 +56,6 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
         res.status(201).json({
             message: "Registeration Successfull",
             user: userData,
-            token
         })
         return
 
