@@ -67,7 +67,6 @@ const userRegistration = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         res.status(201).json({
             message: "Registeration Successfull",
             user: userData,
-            token
         });
         return;
     }

@@ -3,9 +3,12 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BACKEND_URL } from '../lib';
 import axios from 'axios';
+import useUserStore from '../store/userStore';
 
 const LoginPage = () => {
     const navigate = useNavigate();
+
+    const { setUser } = useUserStore()
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,8 +20,9 @@ const LoginPage = () => {
                 email,
                 password
             }, { withCredentials: true })
-            console.log(response.data)
-            navigate('/home')
+
+            setUser(response.data.user)
+            navigate('/dashboard')
         } catch (error) {
             console.error(error)
 
