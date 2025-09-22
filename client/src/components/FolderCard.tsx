@@ -8,7 +8,7 @@ type FolderProps = {
 
 const FolderCard = ({ name, filesCount, createdAt }: FolderProps) => {
     return (
-        <div className="flex items-center gap-3 bg-[#1E1E1E] rounded-lg p-3 border border-zinc-800 hover:border-violet-600 hover:shadow-[0_0_12px_rgba(139,92,246,0.5)] transition-all cursor-pointer">
+        <div className="w-full sm:w-fit flex items-center gap-3 bg-[#1E1E1E] rounded-lg p-3 border border-zinc-800 hover:border-violet-600 hover:shadow-[0_0_12px_rgba(139,92,246,0.5)] transition-all cursor-pointer">
             {/* Folder Icon */}
             <div className="flex-shrink-0 p-2 bg-zinc-900 rounded-md">
                 <Folder className="text-yellow-400" size={28} />

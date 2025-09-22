@@ -37,11 +37,11 @@ const DashboardPage = () => {
                 {/* Main Content */}
                 <main className="flex-1 p-6 overflow-y-auto">
 
-                    <div className="flex justify-between items-center">
-
-                        <h1 className="text-2xl font-semibold mb-4">
+                    <div className="flex justify-between items-center py-3">
+                        <h1 className="text-2xl font-semibold">
                             Welcome, {user?.username}
                         </h1>
+
                         <button
                             onClick={logout}
                             className="bg-red-500 p-2 px-5 text-sm font-medium rounded-md hover:bg-red-600 transition"

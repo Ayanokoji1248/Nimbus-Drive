@@ -24,7 +24,7 @@ const FileCard = ({ name, type, size, uploadedAt }: FileProps) => {
     };
 
     return (
-        <div className="flex items-center gap-3 bg-[#1E1E1E] rounded-lg p-3 border border-zinc-800 hover:border-violet-500 hover:shadow-[0_0_8px_rgba(139,92,246)] transition-all cursor-pointer">
+        <div className="w-full sm:w-fit flex items-center gap-3 bg-[#1E1E1E] rounded-lg p-3 border border-zinc-800 hover:border-violet-500 hover:shadow-[0_0_8px_rgba(139,92,246)] transition-all cursor-pointer">
             {/* File Icon */}
             <div className="flex-shrink-0 p-2 bg-zinc-900 rounded-md">{renderIcon()}</div>
 
