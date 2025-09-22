@@ -8,7 +8,8 @@ type User = {
 }
 interface userStoreState {
     user: User | null,
-    setUser: (user: User | null) => void
+    setUser: (user: User | null) => void,
+    clearUser: () => void
 }
 
 const useUserStore = create<userStoreState>()(persist((set) => ({
@@ -20,7 +21,8 @@ const useUserStore = create<userStoreState>()(persist((set) => ({
         } else {
             set({ user: null })
         }
-    }
+    },
+    clearUser: () => { set({ user: null }) }
 }), {
     name: "user-storage"
 }))

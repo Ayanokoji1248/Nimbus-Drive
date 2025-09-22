@@ -120,3 +120,20 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
         return
     }
 }
+
+export const userLogout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        
+        res.clearCookie("token");
+
+        res.status(200).json({
+            message: "Logout successfully"
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
+}
