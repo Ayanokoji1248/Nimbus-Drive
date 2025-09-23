@@ -2,8 +2,8 @@ import { Folder } from "lucide-react";
 
 type FolderProps = {
     name: string;
-    filesCount: number;
-    createdAt: string; // formatted date string
+    filesCount?: number;
+    createdAt?: string; // formatted date string
 };
 
 const FolderCard = ({ name, filesCount, createdAt }: FolderProps) => {

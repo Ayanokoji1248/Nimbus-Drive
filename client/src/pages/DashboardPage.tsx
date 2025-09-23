@@ -1,12 +1,14 @@
 import useUserStore from "../store/userStore"
 import NavBar from "../components/NavBar";
 import SideBar from "../components/SideBar";
-import FileCard from "../components/FileCard";
 import FolderCard from "../components/FolderCard";
 import { CirclePlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FolderModal from "../components/FolderModal";
 import UploadFileModal from "../components/UploadFileModal";
+import axios from "axios";
+import { BACKEND_URL } from "../lib";
+import { type folderProp } from "../interfaces";
 
 const DashboardPage = () => {
     const { user } = useUserStore();
@@ -30,6 +32,10 @@ const DashboardPage = () => {
     const [folderModal, setFolderModal] = useState(false);
     const [fileModal, setFileModal] = useState(false);
 
+    const [currentFolder, setCurrentFolder] = useState<string | null>(null)
+
+    const [folders, setFolders] = useState<folderProp[]>([]);
+
     // Close modal on outside click
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -49,11 +55,22 @@ const DashboardPage = () => {
         };
     }, [showModal]);
 
+    const fetchFolder = async () => {
+        const response = await axios.get(`${BACKEND_URL}/folder?parentFolder=${currentFolder}`, { withCredentials: true });
+        console.log(currentFolder)
+        console.log(response.data)
+        setFolders(response.data.folders)
+    }
+
+    useEffect(() => {
+        fetchFolder()
+    }, [currentFolder])
+
     return (
         <div className="flex flex-col w-full h-screen bg-zinc-950 text-white">
 
             {folderModal &&
-                <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} />
+                <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />
             }
 
             {
@@ -94,8 +111,24 @@ const DashboardPage = () => {
                         </div>
                     </div>
 
+                    <div>
+                        <button onClick={() => setCurrentFolder(null)} className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all">/Home</button>
+                    </div>
+
                     <div className="py-3 flex items-center gap-y-3 justify-start space-x-3 flex-wrap">
-                        <FileCard
+
+                        {folders.length === 0 && <p className="text-sm font-medium text-zinc-500">No Files or Folders.</p>}
+
+                        {folders.map((folder) => (
+                            <button onClick={() => setCurrentFolder(folder._id)}>
+                                <FolderCard
+                                    key={folder._id}
+                                    name={folder.folderName}
+                                />
+                            </button>
+                        ))}
+
+                        {/* <FileCard
                             name="ProjectReport.pdf"
                             type="document"
                             size="2.3 MB"
@@ -127,7 +160,7 @@ const DashboardPage = () => {
                             type="video"
                             size="45 MB"
                             uploadedAt="Sep 15, 2025"
-                        />
+                        /> */}
                     </div>
 
 

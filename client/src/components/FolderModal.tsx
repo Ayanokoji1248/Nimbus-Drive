@@ -1,21 +1,31 @@
+import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { BACKEND_URL } from "../lib";
 
 interface FolderModalProps {
     folderModal: boolean;
     setFolderModal: React.Dispatch<React.SetStateAction<boolean>>;
+    currentFolder: string | null
 }
 
-const FolderModal = ({ setFolderModal, folderModal }: FolderModalProps) => {
+const FolderModal = ({ setFolderModal, folderModal, currentFolder }: FolderModalProps) => {
     const [folderName, setFolderName] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (folderName.trim() === "") {
             setError("Please enter folder name");
             return
         }
-        console.log(folderName);
+
+        try {
+            const response = await axios.post(`${BACKEND_URL}/folder/create?parentFolder=${currentFolder}`, { folderName }, { withCredentials: true })
+            console.log(response.data);
+            setFolderModal(false)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
