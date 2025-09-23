@@ -6,25 +6,11 @@ import { CirclePlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FolderModal from "../components/FolderModal";
 import UploadFileModal from "../components/UploadFileModal";
-import axios from "axios";
-import { BACKEND_URL } from "../lib";
-import { type folderProp } from "../interfaces";
+import useFolderStore from "../store/folderStore";
 
 const DashboardPage = () => {
     const { user } = useUserStore();
-
-    // const logout = async () => {
-    //     try {
-    //         await axios.post(`${BACKEND_URL}/auth/logout`, {}, {
-    //             withCredentials: true
-    //         })
-    //         clearUser()
-    //         navigate('/login')
-    //         // console.log(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
+    const { folders, fetchFolder } = useFolderStore()
 
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -34,7 +20,8 @@ const DashboardPage = () => {
 
     const [currentFolder, setCurrentFolder] = useState<string | null>(null)
 
-    const [folders, setFolders] = useState<folderProp[]>([]);
+    // const [folders, setFolders] = useState<folderProp[]>([]);
+
 
     // Close modal on outside click
     useEffect(() => {
@@ -55,15 +42,9 @@ const DashboardPage = () => {
         };
     }, [showModal]);
 
-    const fetchFolder = async () => {
-        const response = await axios.get(`${BACKEND_URL}/folder?parentFolder=${currentFolder}`, { withCredentials: true });
-        console.log(currentFolder)
-        console.log(response.data)
-        setFolders(response.data.folders)
-    }
 
     useEffect(() => {
-        fetchFolder()
+        fetchFolder(currentFolder)
     }, [currentFolder])
 
     return (
