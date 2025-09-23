@@ -33,7 +33,7 @@ const FolderModal = ({ setFolderModal, folderModal, currentFolder }: FolderModal
     }
 
     return (
-        <div className="absolute inset-0 flex justify-center items-center z-10 bg-black/60 backdrop-blur-sm">
+        <div className="absolute inset-0 flex justify-center items-center bg-black/60 backdrop-blur-sm z-15">
             <div className="w-80 bg-zinc-900 rounded-2xl shadow-xl p-5 relative">
                 {/* Close Button */}
                 <button

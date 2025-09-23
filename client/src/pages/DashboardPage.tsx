@@ -45,6 +45,7 @@ const DashboardPage = () => {
 
     useEffect(() => {
         fetchFolder(currentFolder)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentFolder])
 
     return (
@@ -84,7 +85,7 @@ const DashboardPage = () => {
                             </button>
 
                             {showModal && (
-                                <div className="absolute right-0 mt-2 w-42 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg p-2">
+                                <div className="absolute right-0 mt-2 w-42 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg p-2 z-12">
                                     <button onClick={() => setFileModal(!fileModal)} className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer">Upload File</button>
                                     <button onClick={() => setFolderModal(!folderModal)} className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer">Create Folder</button>
                                 </div>
@@ -104,7 +105,9 @@ const DashboardPage = () => {
                             <button onClick={() => setCurrentFolder(folder._id)}>
                                 <FolderCard
                                     key={folder._id}
+                                    id={folder._id}
                                     name={folder.folderName}
+
                                 />
                             </button>
                         ))}
