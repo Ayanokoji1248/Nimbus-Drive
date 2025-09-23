@@ -1,5 +1,6 @@
 import { Folder, MoreVertical, Trash2, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import useFolderStore from "../store/folderStore";
 
 type FolderProps = {
     id: string;
@@ -10,7 +11,10 @@ type FolderProps = {
     onRename?: (id: string) => void;
 };
 
-const FolderCard = ({ id, name, filesCount = 0, createdAt, onDelete, onRename }: FolderProps) => {
+const FolderCard = ({ id, name, filesCount = 0, createdAt, onRename }: FolderProps) => {
+
+    const { deleteFolder } = useFolderStore();
+
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -27,6 +31,10 @@ const FolderCard = ({ id, name, filesCount = 0, createdAt, onDelete, onRename }:
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    const handleDelete = async () => {
+        deleteFolder(id);
+    }
 
     return (
         <div
@@ -74,7 +82,7 @@ const FolderCard = ({ id, name, filesCount = 0, createdAt, onDelete, onRename }:
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setMenuOpen(false);
-                                onDelete?.(id);
+                                handleDelete()
                             }}
                             className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 transition"
                         >

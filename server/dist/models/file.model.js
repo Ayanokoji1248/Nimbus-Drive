@@ -37,10 +37,6 @@ const mongoose_1 = __importStar(require("mongoose"));
 const fileSchema = new mongoose_1.Schema({
     fileName: String,
     fileType: String,
-    folder: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "folder"
-    },
     user: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "user"

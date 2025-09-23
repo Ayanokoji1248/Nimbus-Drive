@@ -45,6 +45,10 @@ const folderSchema = new mongoose_1.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "user"
     },
+    files: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "file"
+        }]
 });
 const Folder = (0, mongoose_1.model)("folder", folderSchema);
 exports.default = Folder;

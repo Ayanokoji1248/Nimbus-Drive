@@ -7,6 +7,7 @@ type folderStoreType = {
     folders: folderProp[],
     fetchFolder: (currentFolder: string | null) => void,
     addFolder: (folder: string, parentFolder: string | null) => void;
+    deleteFolder: (folderId: string) => void;
 }
 
 const useFolderStore = create<folderStoreType>((set) => ({
@@ -36,6 +37,22 @@ const useFolderStore = create<folderStoreType>((set) => ({
             console.error(error)
         }
 
+    },
+    deleteFolder: async (folderId) => {
+        try {
+
+            set((state) => ({
+                folders: state.folders.filter((folder) => folder._id != folderId)
+            }))
+
+            const response = await axios.delete(`${BACKEND_URL}/folder/${folderId}`, { withCredentials: true });
+            console.log(response.data);
+
+
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 }))
 

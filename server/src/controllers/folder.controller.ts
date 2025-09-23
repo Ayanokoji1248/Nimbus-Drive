@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Folder from "../models/folder.model";
+import { deleteFolderRecursive } from "../lib/recursiveDelete";
 
 
 export const createFolder = async (req: Request, res: Response, next: NextFunction) => {
@@ -50,6 +51,43 @@ export const getAllFolder = async (req: Request, res: Response, next: NextFuncti
         res.status(200).json({
             folders
         })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+        return
+    }
+}
+
+export const deleteFolder = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const { id } = req.params;
+
+        if (!id) {
+            res.status(404).json({
+                message: "Id not there"
+            })
+            return
+        }
+
+        const folder = await Folder.findById(id);
+
+        if (!folder) {
+            res.status(404).json({
+                message: "Folder not found"
+            })
+            return
+        }
+
+        deleteFolderRecursive(id);
+
+        res.status(200).json({
+            message: "Folder Deleted Successfully"
+        })
+        return
 
     } catch (error) {
         console.error(error);

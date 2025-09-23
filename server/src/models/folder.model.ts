@@ -11,6 +11,10 @@ const folderSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
+    files: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "file"
+    }]
 })
 
 const Folder = model("folder", folderSchema);
