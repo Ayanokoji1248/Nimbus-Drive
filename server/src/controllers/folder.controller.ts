@@ -39,14 +39,14 @@ export const createFolder = async (req: Request, res: Response, next: NextFuncti
 
 export const getAllFolder = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
+        const userId = req.user.id
         let { parentFolder } = req.query
 
         if (parentFolder === "null" || parentFolder === undefined) {
             parentFolder = null as any;
         }
 
-        const folders = await Folder.find({ parentFolder });
+        const folders = await Folder.find({ parentFolder, user: userId });
 
         res.status(200).json({
             folders

@@ -4,7 +4,7 @@ import userMiddleware from "../middlewares/user.middleware";
 const folderRouter = Router();
 
 folderRouter.post('/create', userMiddleware, createFolder);
-folderRouter.get('/', userMiddleware, getAllFolder)
+folderRouter.get('/', userMiddleware, userMiddleware, getAllFolder)
 
 folderRouter.delete('/:id', userMiddleware, deleteFolder)
 

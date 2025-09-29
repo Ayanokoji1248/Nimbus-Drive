@@ -45,11 +45,12 @@ const createFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 exports.createFolder = createFolder;
 const getAllFolder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const userId = req.user.id;
         let { parentFolder } = req.query;
         if (parentFolder === "null" || parentFolder === undefined) {
             parentFolder = null;
         }
-        const folders = yield folder_model_1.default.find({ parentFolder });
+        const folders = yield folder_model_1.default.find({ parentFolder, user: userId });
         res.status(200).json({
             folders
         });

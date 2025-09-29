@@ -28,6 +28,7 @@ const zod_1 = require("zod");
 const user_model_1 = __importDefault(require("../models/user.model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const generateToken_1 = require("../lib/generateToken");
+const createUserRootFolder_1 = __importDefault(require("../lib/createUserRootFolder"));
 const userRegisterSchema = zod_1.z.object({
     username: zod_1.z.string().min(5, "Atleast 5 character").trim(),
     email: zod_1.z.string().email("Invalid Email").trim(),
@@ -63,6 +64,7 @@ const userRegistration = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         yield user.save();
         const token = yield (0, generateToken_1.generateToken)({ id: user._id.toString(), email: user.email });
         res.cookie("token", token);
+        yield (0, createUserRootFolder_1.default)(user._id.toString());
         const _a = user.toObject(), { password: _ } = _a, userData = __rest(_a, ["password"]);
         res.status(201).json({
             message: "Registeration Successfull",

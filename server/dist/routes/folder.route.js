@@ -8,6 +8,6 @@ const folder_controller_1 = require("../controllers/folder.controller");
 const user_middleware_1 = __importDefault(require("../middlewares/user.middleware"));
 const folderRouter = (0, express_1.Router)();
 folderRouter.post('/create', user_middleware_1.default, folder_controller_1.createFolder);
-folderRouter.get('/', user_middleware_1.default, folder_controller_1.getAllFolder);
+folderRouter.get('/', user_middleware_1.default, user_middleware_1.default, folder_controller_1.getAllFolder);
 folderRouter.delete('/:id', user_middleware_1.default, folder_controller_1.deleteFolder);
 exports.default = folderRouter;

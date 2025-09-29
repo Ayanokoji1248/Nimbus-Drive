@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 
 import jwt from "jsonwebtoken"
 import { generateToken } from "../lib/generateToken";
+import rootFolderCreate from "../lib/createUserRootFolder";
 
 const userRegisterSchema = z.object({
     username: z.string().min(5, "Atleast 5 character").trim(),
@@ -50,6 +51,8 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
         await user.save();
         const token = await generateToken({ id: user._id.toString(), email: user.email })
         res.cookie("token", token)
+
+        await rootFolderCreate(user._id.toString());
 
         const { password: _, ...userData } = user.toObject()
 
@@ -123,7 +126,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
 
 export const userLogout = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        
+
         res.clearCookie("token");
 
         res.status(200).json({
