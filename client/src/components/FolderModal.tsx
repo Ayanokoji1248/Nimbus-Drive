@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import useFolderStore from "../store/folderStore";
+import useLoadingStore from "../store/loadingStore";
 
 interface FolderModalProps {
     folderModal: boolean;
@@ -13,23 +14,17 @@ const FolderModal = ({ setFolderModal, folderModal, currentFolder }: FolderModal
     const [error, setError] = useState("");
 
     const { addFolder } = useFolderStore();
+    const { loading, setLoading } = useLoadingStore();
 
     const handleSubmit = async () => {
         if (folderName.trim() === "") {
             setError("Please enter folder name");
             return
         }
-
-        addFolder(folderName, currentFolder)
+        setLoading(true)
+        await addFolder(folderName, currentFolder)
         setFolderModal(false)
-
-        // try {
-        //     const response = await axios.post(`${BACKEND_URL}/folder/create?parentFolder=${currentFolder}`, { folderName }, { withCredentials: true })
-        //     console.log(response.data);
-        //     setFolderModal(false)
-        // } catch (error) {
-        //     console.error(error)
-        // }
+        setLoading(false)
     }
 
     return (
@@ -63,7 +58,7 @@ const FolderModal = ({ setFolderModal, folderModal, currentFolder }: FolderModal
                         onClick={() => handleSubmit()}
                         className="w-full py-2 rounded-lg font-medium text-white bg-violet-600 hover:bg-violet-700 active:scale-[0.98] transition-all cursor-pointer"
                     >
-                        Create Folder
+                        {loading ? "Creating Folder..." : "Create Folder"}
                     </button>
                 </div>
             </div>

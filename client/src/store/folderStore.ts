@@ -5,8 +5,8 @@ import { BACKEND_URL } from "../lib";
 
 type folderStoreType = {
     folders: folderProp[],
-    fetchFolder: (currentFolder: string | null) => void,
-    addFolder: (folder: string, parentFolder: string | null) => void;
+    fetchFolder: (currentFolder: string | null) => Promise<void>,
+    addFolder: (folder: string, parentFolder: string | null) => Promise<void>;
     deleteFolder: (folderId: string) => void;
 }
 

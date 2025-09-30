@@ -20,8 +20,19 @@ const DashboardPage = () => {
 
     const [currentFolder, setCurrentFolder] = useState<string | null>(null)
 
-    // const [folders, setFolders] = useState<folderProp[]>([]);
+    const [breadCrumbs, setBreadCrumbs] = useState<{ id: string | null, name: string }[]>([]);
 
+    // open folder → add crumb
+    const handleOpenFolder = (folder: { _id: string, folderName: string }) => {
+        setCurrentFolder(folder._id);
+        setBreadCrumbs((prev) => [...prev, { id: folder._id, name: folder.folderName }]);
+    };
+
+    // go back via breadcrumb
+    const handleBreadcrumbClick = (id: string | null, index: number) => {
+        setCurrentFolder(id);
+        setBreadCrumbs((prev) => prev.slice(0, index + 1)); // keep only till clicked
+    };
 
     // Close modal on outside click
     useEffect(() => {
@@ -42,10 +53,10 @@ const DashboardPage = () => {
         };
     }, [showModal]);
 
-
+    // fetch folders when folder changes
     useEffect(() => {
         fetchFolder(currentFolder)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentFolder])
 
     return (
@@ -55,9 +66,8 @@ const DashboardPage = () => {
                 <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />
             }
 
-            {
-                fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} />
-            }
+            {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} />}
+
             {/* Top Navbar */}
             <NavBar />
 
@@ -68,9 +78,6 @@ const DashboardPage = () => {
 
                 {/* Main Content */}
                 <main className="flex-1 p-6 overflow-y-auto relative">
-
-
-
                     <div className="flex justify-between items-center py-3">
                         <h1 className="text-2xl font-semibold">
                             Welcome, {user?.username}
@@ -86,68 +93,59 @@ const DashboardPage = () => {
 
                             {showModal && (
                                 <div className="absolute right-0 mt-2 w-42 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg p-2 z-12">
-                                    <button onClick={() => setFileModal(!fileModal)} className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer">Upload File</button>
-                                    <button onClick={() => setFolderModal(!folderModal)} className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer">Create Folder</button>
+                                    <button
+                                        onClick={() => setFileModal(!fileModal)}
+                                        className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
+                                    >
+                                        Upload File
+                                    </button>
+                                    <button
+                                        onClick={() => setFolderModal(!folderModal)}
+                                        className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
+                                    >
+                                        Create Folder
+                                    </button>
                                 </div>
                             )}
                         </div>
                     </div>
 
+                    {/* Breadcrumbs */}
                     <div>
-                        <button onClick={() => setCurrentFolder(null)} className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all">/Home</button>
+                        <button
+                            onClick={() => {
+                                setCurrentFolder(null);
+                                setBreadCrumbs([]); // reset breadcrumbs on home
+                            }}
+                            className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
+                        >
+                            /Home
+                        </button>
+                        {breadCrumbs.map((crumb, index) => (
+                            <button
+                                key={crumb.id}
+                                onClick={() => handleBreadcrumbClick(crumb.id, index)}
+                                className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
+                            >
+                                /{crumb.name}
+                            </button>
+                        ))}
                     </div>
 
                     <div className="py-3 flex items-center gap-y-3 justify-start space-x-3 flex-wrap">
-
-                        {folders.length === 0 && <p className="text-sm font-medium text-zinc-500">No Files or Folders.</p>}
+                        {folders.length === 0 && (
+                            <p className="text-sm font-medium text-zinc-500">No Files or Folders.</p>
+                        )}
 
                         {folders.map((folder) => (
-                            <button onClick={() => setCurrentFolder(folder._id)}>
+                            <button key={folder._id} onClick={() => handleOpenFolder(folder)}>
                                 <FolderCard
-                                    key={folder._id}
                                     id={folder._id}
                                     name={folder.folderName}
-
                                 />
                             </button>
                         ))}
-
-                        {/* <FileCard
-                            name="ProjectReport.pdf"
-                            type="document"
-                            size="2.3 MB"
-                            uploadedAt="Sep 20, 2025"
-                        />
-                        <FolderCard
-                            name="College Projects"
-                            filesCount={12}
-                            createdAt="Sep 21, 2025"
-                        />
-                        <FolderCard
-                            name="Personal Documents"
-                            filesCount={5}
-                            createdAt="Sep 15, 2025"
-                        />
-                        <FolderCard
-                            name="Personal Documents"
-                            filesCount={5}
-                            createdAt="Sep 15, 2025"
-                        />
-                        <FileCard
-                            name="VacationPhoto.png"
-                            type="image"
-                            size="1.1 MB"
-                            uploadedAt="Sep 18, 2025"
-                        />
-                        <FileCard
-                            name="LectureRecording.mp4"
-                            type="video"
-                            size="45 MB"
-                            uploadedAt="Sep 15, 2025"
-                        /> */}
                     </div>
-
-
                 </main>
             </div>
         </div>

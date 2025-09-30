@@ -52,6 +52,7 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
         const token = await generateToken({ id: user._id.toString(), email: user.email })
         res.cookie("token", token)
 
+        // This creates folder in supabase with userId
         await rootFolderCreate(user._id.toString());
 
         const { password: _, ...userData } = user.toObject()
