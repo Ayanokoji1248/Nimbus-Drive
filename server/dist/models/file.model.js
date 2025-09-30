@@ -36,7 +36,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const fileSchema = new mongoose_1.Schema({
     fileName: String,
+    fileSize: Number,
     fileType: String,
+    fileUrl: String,
+    parentFolder: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "folder",
+        default: null,
+    },
     user: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "user"

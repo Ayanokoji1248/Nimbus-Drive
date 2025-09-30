@@ -7,11 +7,9 @@ type FolderProps = {
     name: string;
     filesCount?: number;
     createdAt?: string;
-    onDelete?: (id: string) => void;
-    onRename?: (id: string) => void;
 };
 
-const FolderCard = ({ id, name, filesCount = 0, createdAt, onRename }: FolderProps) => {
+const FolderCard = ({ id, name, filesCount = 0, createdAt }: FolderProps) => {
 
     const { deleteFolder } = useFolderStore();
 
@@ -72,7 +70,6 @@ const FolderCard = ({ id, name, filesCount = 0, createdAt, onRename }: FolderPro
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setMenuOpen(false);
-                                onRename?.(id);
                             }}
                             className="w-full flex items-center gap-2 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800 transition"
                         >

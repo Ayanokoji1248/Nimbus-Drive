@@ -19,6 +19,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dbConnection_1 = require("./config/dbConnection");
 const folder_route_1 = __importDefault(require("./routes/folder.route"));
 const cors_1 = __importDefault(require("cors"));
+const file_route_1 = __importDefault(require("./routes/file.route"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -30,6 +31,7 @@ app.use((0, cors_1.default)({
 }));
 app.use('/api/auth', auth_route_1.default);
 app.use('/api/folder', folder_route_1.default);
+app.use('/api/file', file_route_1.default);
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield (0, dbConnection_1.dbConnection)();

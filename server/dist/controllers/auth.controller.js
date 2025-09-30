@@ -64,6 +64,7 @@ const userRegistration = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         yield user.save();
         const token = yield (0, generateToken_1.generateToken)({ id: user._id.toString(), email: user.email });
         res.cookie("token", token);
+        // This creates folder in supabase with userId
         yield (0, createUserRootFolder_1.default)(user._id.toString());
         const _a = user.toObject(), { password: _ } = _a, userData = __rest(_a, ["password"]);
         res.status(201).json({

@@ -7,10 +7,16 @@ import { useEffect, useRef, useState } from "react";
 import FolderModal from "../components/FolderModal";
 import UploadFileModal from "../components/UploadFileModal";
 import useFolderStore from "../store/folderStore";
+import useLoadingStore from "../store/loadingStore";
+import useFileStore from "../store/fileStore";
+import FileCard from "../components/FileCard";
+import SkeletonCard from "../components/SkeletonCard";
 
 const DashboardPage = () => {
     const { user } = useUserStore();
     const { folders, fetchFolder } = useFolderStore()
+    const { files, fetchFiles } = useFileStore();
+    const { loading, setLoading } = useLoadingStore()
 
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -55,7 +61,13 @@ const DashboardPage = () => {
 
     // fetch folders when folder changes
     useEffect(() => {
-        fetchFolder(currentFolder)
+        const fetch = async () => {
+            setLoading(true)
+            await fetchFolder(currentFolder)
+            await fetchFiles(currentFolder)
+            setLoading(false)
+        }
+        fetch()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentFolder])
 
@@ -66,7 +78,7 @@ const DashboardPage = () => {
                 <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />
             }
 
-            {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} />}
+            {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} currentFolder={currentFolder} />}
 
             {/* Top Navbar */}
             <NavBar />
@@ -133,18 +145,43 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="py-3 flex items-center gap-y-3 justify-start space-x-3 flex-wrap">
-                        {folders.length === 0 && (
-                            <p className="text-sm font-medium text-zinc-500">No Files or Folders.</p>
+
+                        {loading ? (
+                            // Show skeletons while fetching
+                            <div className="flex gap-3 flex-wrap">
+                                {[...Array(6)].map((_, i) => (
+                                    <SkeletonCard key={i} />
+                                ))}
+                            </div>
+                        ) : (
+                            <>
+                                {(folders.length === 0 && files.length === 0) && (
+                                    <p className="text-sm font-medium text-zinc-500">
+                                        No Files or Folders.
+                                    </p>
+                                )}
+
+                                {folders.map((folder) => (
+                                    <button key={folder._id} onClick={() => handleOpenFolder(folder)}>
+                                        <FolderCard id={folder._id} name={folder.folderName} />
+                                    </button>
+                                ))}
+
+                                {files.map((file) => (
+                                    <FileCard
+                                        key={file._id}
+                                        id={file._id}
+                                        name={file.fileName}
+                                        type={file.fileType}
+                                        size={file.fileSize}
+                                        uploadedAt={file.createdAt}
+                                    />
+                                ))}
+                            </>
                         )}
 
-                        {folders.map((folder) => (
-                            <button key={folder._id} onClick={() => handleOpenFolder(folder)}>
-                                <FolderCard
-                                    id={folder._id}
-                                    name={folder.folderName}
-                                />
-                            </button>
-                        ))}
+
+
                     </div>
                 </main>
             </div>

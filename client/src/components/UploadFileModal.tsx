@@ -1,14 +1,22 @@
 import { useState, type ChangeEvent } from "react";
 import { UploadCloud, X } from "lucide-react";
+import useUserStore from "../store/userStore";
+import { uploadFile } from "../utils/uploadFile";
+import useLoadingStore from "../store/loadingStore";
+import useFileStore from "../store/fileStore";
 
 interface UploadFileModalProps {
     fileModal: boolean;
     setFileModal: React.Dispatch<React.SetStateAction<boolean>>;
+    currentFolder: string | null,
 }
 
-const UploadFileModal = ({ setFileModal, fileModal }: UploadFileModalProps) => {
+const UploadFileModal = ({ setFileModal, fileModal, currentFolder }: UploadFileModalProps) => {
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState("");
+    const { user } = useUserStore();
+    const { loading, setLoading } = useLoadingStore();
+    const { addFile } = useFileStore();
 
     // Handle file input
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,12 +26,30 @@ const UploadFileModal = ({ setFileModal, fileModal }: UploadFileModalProps) => {
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!file) {
             setError("⚠️ Please select a file before uploading.");
             return;
         }
-        console.log(file);
+        const { name, size, type } = file;
+        console.log(name, size, type)
+        try {
+            setLoading(true)
+            const fileURL = await uploadFile(user?._id as string, currentFolder as string, file);
+
+            await addFile(file, currentFolder, fileURL);
+
+            setFileModal(false);
+
+            console.log(fileURL)
+        } catch (error) {
+            console.error(error);
+
+        } finally {
+            setLoading(false);
+        }
+
+
     };
 
     return (
@@ -88,6 +114,7 @@ const UploadFileModal = ({ setFileModal, fileModal }: UploadFileModalProps) => {
 
                 {/* Submit Button */}
                 <button
+                    disabled={loading}
                     onClick={handleSubmit}
                     className="w-full mt-5 py-2 rounded-lg font-medium text-white bg-violet-600 hover:bg-violet-700 active:scale-[0.98] transition-all cursor-pointer"
                 >

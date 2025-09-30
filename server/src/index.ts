@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser"
 import { dbConnection } from "./config/dbConnection";
 import folderRouter from "./routes/folder.route";
 import cors from "cors"
+import fileRouter from "./routes/file.route";
 dotenv.config();
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cors({
 
 app.use('/api/auth', authRouter);
 app.use('/api/folder', folderRouter);
+app.use('/api/file', fileRouter)
 
 async function main() {
     await dbConnection()

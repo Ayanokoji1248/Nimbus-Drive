@@ -1,5 +1,15 @@
 export interface folderProp {
-    _id:string,
+    _id: string,
     folderName: string,
     parentFolder: string,
 }
+
+export interface fileProp {
+    _id: string,
+    fileName: string,
+    fileSize: number,
+    fileType: string,
+    fileUrl: string,
+    createdAt: string
+}
+
