@@ -5,11 +5,10 @@ import useFolderStore from "../store/folderStore";
 type FolderProps = {
     id: string;
     name: string;
-    filesCount?: number;
-    createdAt?: string;
+    createdAt: string;
 };
 
-const FolderCard = ({ id, name, filesCount = 0, createdAt }: FolderProps) => {
+const FolderCard = ({ id, name, createdAt }: FolderProps) => {
 
     const { deleteFolder } = useFolderStore();
 
@@ -30,6 +29,15 @@ const FolderCard = ({ id, name, filesCount = 0, createdAt }: FolderProps) => {
         };
     }, []);
 
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    };
+
     const handleDelete = async () => {
         deleteFolder(id);
     }
@@ -47,7 +55,7 @@ const FolderCard = ({ id, name, filesCount = 0, createdAt }: FolderProps) => {
                 <div className="flex flex-col overflow-hidden">
                     <span className="text-white font-medium truncate">{name}</span>
                     <span className="text-sm text-zinc-400">
-                        {filesCount} {filesCount === 1 ? "file" : "files"} • {createdAt}
+                        • {formatDate(createdAt)}
                     </span>
                 </div>
             </div>

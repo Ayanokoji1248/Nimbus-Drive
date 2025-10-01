@@ -2,6 +2,7 @@ export interface folderProp {
     _id: string,
     folderName: string,
     parentFolder: string,
+    createdAt: string,
 }
 
 export interface fileProp {

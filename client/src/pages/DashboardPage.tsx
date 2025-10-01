@@ -162,9 +162,13 @@ const DashboardPage = () => {
                                 )}
 
                                 {folders.map((folder) => (
-                                    <button key={folder._id} onClick={() => handleOpenFolder(folder)}>
-                                        <FolderCard id={folder._id} name={folder.folderName} />
-                                    </button>
+                                    <div key={folder._id} onClick={() => handleOpenFolder(folder)}>
+                                        <FolderCard
+                                            id={folder._id}
+                                            name={folder.folderName}
+                                            createdAt={folder.createdAt}
+                                        />
+                                    </div>
                                 ))}
 
                                 {files.map((file) => (

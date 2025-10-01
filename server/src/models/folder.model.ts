@@ -15,6 +15,8 @@ const folderSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "file"
     }]
+}, {
+    timestamps: true
 })
 
 const Folder = model("folder", folderSchema);
