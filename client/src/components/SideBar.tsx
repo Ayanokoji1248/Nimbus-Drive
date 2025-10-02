@@ -1,10 +1,13 @@
-import { CloudUpload } from "lucide-react"
+import { CloudUpload, LogOut } from "lucide-react"
+import useUserStore from "../store/userStore"
 
 const SideBar = () => {
-    return (
-        <div className='lg:w-72 w-20 bg-[#141414] lg:p-6'>
-            <div className="group">
 
+    const {clearUser} = useUserStore();
+    return (
+        <div className='lg:w-72 w-20 bg-[#141414] lg:p-6 flex flex-col h-screen '>
+            {/* Top Logo */}
+            <div className="group">
                 <div className="flex justify-center items-center gap-3">
                     <div className='p-3 bg-[#1E1E1E] w-fit rounded-xl'>
                         <CloudUpload size={30} className='text-violet-500' />
@@ -17,6 +20,11 @@ const SideBar = () => {
                 </div>
             </div>
 
+            {/* Logout Button */}
+            <button onClick={clearUser} className="flex justify-center lg:justify-start mt-6 cursor-pointer hover:bg-red-700/20 p-3 rounded-lg items-center gap-3">
+                <LogOut size={20} className="text-red-500" />
+                <span className="hidden lg:block text-red-500 font-semibold">Logout</span>
+            </button>
         </div>
     )
 }

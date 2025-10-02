@@ -1,5 +1,6 @@
 import e, { Request, Response, NextFunction } from "express";
 import File from "../models/file.model";
+import deleteFromSupabase from "../lib/supabaseDelete";
 
 export const fileUpload = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -51,6 +52,51 @@ export const getAllFiles = async (req: Request, res: Response, next: NextFunctio
 
     } catch (error) {
         console.error(error)
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
+}
+
+
+export const deleteFile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const fileId = req.params.id;
+        const userId = req.user.id
+
+        const file = await File.findById(fileId);
+
+        if (!file) {
+            res.status(404).json({
+                message: "File not found"
+            })
+            return
+        }
+
+        const filePath = `${userId}/${file?.parentFolder}/${file?.fileName}`
+        console.log(filePath)
+        const supabaseDeleted = await deleteFromSupabase(filePath)
+
+        console.log(supabaseDeleted);
+
+        if (!supabaseDeleted) {
+            res.status(500).json({ message: "Error deleting file from Supabase" });
+            return
+        }
+
+
+        const deletedFile = await File.deleteOne({ _id: fileId, user: userId });
+
+        if (deletedFile.deletedCount === 0) {
+            return res.status(404).json({ message: "File not found or unauthorized" });
+        }
+
+        res.status(200).json({
+            message: "File Deleted Successfully"
+        })
+
+    } catch (error) {
+        console.error(error);
         res.status(500).json({
             message: "Internal Server Error"
         })

@@ -30,7 +30,7 @@ const RegisterPage = () => {
     }
 
     return (
-        <div className="w-full h-screen bg-zinc-950 text-white flex justify-center items-center">
+        <div className="w-full h-screen bg-gradient-to-br from-gray-900 via-black to-purple-900 text-white flex justify-center items-center">
             <div className="w-108 flex justify-center items-center py-5 flex-col">
 
                 <div className='flex flex-col justify-center items-center gap-3'>

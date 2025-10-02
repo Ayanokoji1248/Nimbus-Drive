@@ -11,6 +11,7 @@ import useLoadingStore from "../store/loadingStore";
 import useFileStore from "../store/fileStore";
 import FileCard from "../components/FileCard";
 import SkeletonCard from "../components/SkeletonCard";
+import { Toaster } from "react-hot-toast";
 
 const DashboardPage = () => {
     const { user } = useUserStore();
@@ -73,6 +74,7 @@ const DashboardPage = () => {
 
     return (
         <div className="flex flex-col w-full h-screen bg-zinc-950 text-white">
+            <Toaster position="bottom-right" reverseOrder={false} />
 
             {folderModal &&
                 <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />

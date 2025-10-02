@@ -1,5 +1,6 @@
 import { FileText, Image, Video, Music, MoreVertical, Download, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import useFileStore from "../store/fileStore";
 
 type FileProps = {
     id: string;
@@ -7,13 +8,13 @@ type FileProps = {
     type: string;         // mime or category
     size: number;         // raw bytes
     uploadedAt: string;   // ISO string
-    onDelete?: (id: string) => void;
-    onDownload?: (id: string, name: string) => void;
 };
 
-const FileCard = ({ id, name, type, size, uploadedAt, onDelete, onDownload }: FileProps) => {
+const FileCard = ({ id, name, type, size, uploadedAt }: FileProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    const { removeFile } = useFileStore();
 
     // Close menu if clicked outside
     useEffect(() => {
@@ -86,16 +87,18 @@ const FileCard = ({ id, name, type, size, uploadedAt, onDelete, onDownload }: Fi
                         <button
                             onClick={() => {
                                 setMenuOpen(false);
-                                onDownload?.(id, name);
                             }}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-zinc-700"
                         >
                             <Download size={16} /> Download
                         </button>
                         <button
-                            onClick={() => {
+                            onClick={async () => {
                                 setMenuOpen(false);
-                                onDelete?.(id);
+                                const deleteConfirm = confirm("Are you sure?");
+                                if (deleteConfirm) {
+                                    await removeFile(id)
+                                }
                             }}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-zinc-700"
                         >

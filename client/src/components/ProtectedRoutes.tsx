@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import useUserStore from "../store/userStore"
 
 const ProtectedRoutes = () => {
@@ -7,9 +7,9 @@ const ProtectedRoutes = () => {
 
     if (user) return <Outlet />
 
-    else return 
-    
-    
+    else return <Navigate to={"/login"} />
+
+
 }
 
 export default ProtectedRoutes

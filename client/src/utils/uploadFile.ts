@@ -2,7 +2,12 @@ import supabase from "../config/supabase";
 
 export const uploadFile = async (userId: string, folderName: string, file: File): Promise<string> => {
     try {
-        const filePath = `${userId}/${folderName}/${file.name}`;
+        const fileName = file.name
+            .replace(/[^\w\s]/gi, "") // remove emojis/special chars
+            .replace(/\s+/g, "_")     // spaces → underscores
+            .replace(/_+/g, "_")      // collapse multiple underscores
+            .toLowerCase();            // lowercase
+        const filePath = `${userId}/${folderName}/${fileName}`;
 
         const { error } = await supabase.storage.from("nimbus-drive").upload(filePath, file);
 
