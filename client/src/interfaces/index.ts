@@ -11,6 +11,7 @@ export interface fileProp {
     fileSize: number,
     fileType: string,
     fileUrl: string,
-    createdAt: string
+    createdAt: string,
+    parentFolder?: string,
 }
 

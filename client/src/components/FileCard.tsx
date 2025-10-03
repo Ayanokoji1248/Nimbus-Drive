@@ -1,6 +1,8 @@
 import { FileText, Image, Video, Music, MoreVertical, Download, Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import useFileStore from "../store/fileStore";
+import downloadFile from "../utils/downloadFile";
+import useUserStore from "../store/userStore";
 
 type FileProps = {
     id: string;
@@ -8,13 +10,16 @@ type FileProps = {
     type: string;         // mime or category
     size: number;         // raw bytes
     uploadedAt: string;   // ISO string
+    parentFolder?: string;
 };
 
-const FileCard = ({ id, name, type, size, uploadedAt }: FileProps) => {
+const FileCard = ({ id, name, type, size, uploadedAt, parentFolder }: FileProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
     const { removeFile } = useFileStore();
+    const { user } = useUserStore()
+
 
     // Close menu if clicked outside
     useEffect(() => {
@@ -86,6 +91,11 @@ const FileCard = ({ id, name, type, size, uploadedAt }: FileProps) => {
                     <div className="absolute right-0 mt-2 w-40 bg-[#2A2A2A] border border-zinc-700 rounded-lg shadow-lg z-20">
                         <button
                             onClick={() => {
+                                if (user?._id) {
+                                    downloadFile(user._id, parentFolder as string, name);
+                                } else {
+                                    console.error("User ID and parentFolder is undefined");
+                                }
                                 setMenuOpen(false);
                             }}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-zinc-700"

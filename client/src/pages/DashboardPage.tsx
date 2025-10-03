@@ -181,6 +181,7 @@ const DashboardPage = () => {
                                         type={file.fileType}
                                         size={file.fileSize}
                                         uploadedAt={file.createdAt}
+                                        parentFolder={file.parentFolder}
                                     />
                                 ))}
                             </>
