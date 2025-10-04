@@ -51,6 +51,13 @@ const UploadFileModal = ({ setFileModal, fileModal, currentFolder }: UploadFileM
 
 
     };
+    const formatFileSize = (bytes: number): string => {
+        if (bytes === 0) return "0 Bytes"
+        const k = 1024
+        const sizes = ["Bytes", "KB", "MB", "GB"]
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
 
     return (
         <div className="fixed inset-0 flex justify-center items-center z-50 bg-black/60 backdrop-blur-sm">
@@ -99,7 +106,7 @@ const UploadFileModal = ({ setFileModal, fileModal, currentFolder }: UploadFileM
                         <div>
                             <p className="text-white text-sm">{file.name}</p>
                             <p className="text-xs text-zinc-400">
-                                {(file.size / 1024).toFixed(2)} KB
+                                {formatFileSize(file.size)}
                             </p>
                         </div>
                         <button

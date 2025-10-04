@@ -48,12 +48,13 @@ const FileCard = ({ id, name, type, size, uploadedAt, parentFolder }: FileProps)
 
 
     // Convert bytes → KB / MB / GB
-    const formatSize = (bytes: number) => {
-        if (bytes < 1024) return `${bytes} B`;
-        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-        if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-        return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-    };
+    const formatFileSize = (bytes: number): string => {
+        if (bytes === 0) return "0 Bytes"
+        const k = 1024
+        const sizes = ["Bytes", "KB", "MB", "GB"]
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
 
     // Format date nicely
     const formatDate = (dateStr: string) => {
@@ -73,7 +74,7 @@ const FileCard = ({ id, name, type, size, uploadedAt, parentFolder }: FileProps)
                 <div className="flex flex-col overflow-hidden">
                     <span className="text-white font-medium truncate">{name}</span>
                     <span className="text-sm text-zinc-400">
-                        {formatSize(size)} • {formatDate(uploadedAt)}
+                        {formatFileSize(size)} • {formatDate(uploadedAt)}
                     </span>
                 </div>
             </div>
