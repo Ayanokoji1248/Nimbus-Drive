@@ -47,7 +47,10 @@ const fileSchema = new mongoose_1.Schema({
     user: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "user"
-    }
+    },
+    sharedWith: [{
+            type: String
+        }]
 }, { timestamps: true });
 const File = (0, mongoose_1.model)('file', fileSchema);
 exports.default = File;

@@ -13,7 +13,10 @@ const fileSchema = new Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
-    }
+    },
+    sharedWith: [{
+        type: String
+    }]
 }, { timestamps: true })
 
 const File = model('file', fileSchema);

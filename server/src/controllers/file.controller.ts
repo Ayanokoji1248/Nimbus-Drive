@@ -36,6 +36,7 @@ export const getAllFiles = async (req: Request, res: Response, next: NextFunctio
     try {
         let { parentFolder } = req.query;
         const userId = req.user.id;
+        const userEmail = req.user.email
 
 
         if (parentFolder === "null" || parentFolder === undefined) {
@@ -100,5 +101,57 @@ export const deleteFile = async (req: Request, res: Response, next: NextFunction
         res.status(500).json({
             message: "Internal Server Error"
         })
+    }
+}
+
+
+export const shareFile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const userId = req.user.id;
+        const { email } = req.body;
+        const fileId = req.params.id
+
+        const file = await File.findById(fileId);
+
+        if (!file) {
+            res.status(404).json({
+                message: "File not found"
+            })
+            return
+        }
+
+        if (file.user?.toString() !== userId) {
+            res.status(403).json({
+                message: "Unauthorized Access"
+            })
+            return
+        }
+
+        if (!file.sharedWith.includes(email)) {
+            file.sharedWith.push(email);
+        }
+
+        await file.save()
+
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const getSharedFiles = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userEmail = req.user.email;
+
+        const files = await File.find({ sharedWith: userEmail });
+
+        res.status(200).json({
+            message: "All Shared Files",
+            files
+        })
+
+    } catch (error) {
+        console.error(error);
     }
 }

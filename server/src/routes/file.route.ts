@@ -9,4 +9,6 @@ fileRouter.get('/all', userMiddleware, getAllFiles)
 
 fileRouter.delete('/:id', userMiddleware, deleteFile)
 
+fileRouter.post('/:id/share', userMiddleware,)
+
 export default fileRouter;

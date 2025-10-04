@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteFile = exports.getAllFiles = exports.fileUpload = void 0;
+exports.getSharedFiles = exports.shareFile = exports.deleteFile = exports.getAllFiles = exports.fileUpload = void 0;
 const file_model_1 = __importDefault(require("../models/file.model"));
 const supabaseDelete_1 = __importDefault(require("../lib/supabaseDelete"));
 const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,6 +45,7 @@ const getAllFiles = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     try {
         let { parentFolder } = req.query;
         const userId = req.user.id;
+        const userEmail = req.user.email;
         if (parentFolder === "null" || parentFolder === undefined) {
             parentFolder = null;
         }
@@ -97,3 +98,46 @@ const deleteFile = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.deleteFile = deleteFile;
+const shareFile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const userId = req.user.id;
+        const { email } = req.body;
+        const fileId = req.params.id;
+        const file = yield file_model_1.default.findById(fileId);
+        if (!file) {
+            res.status(404).json({
+                message: "File not found"
+            });
+            return;
+        }
+        if (((_a = file.user) === null || _a === void 0 ? void 0 : _a.toString()) !== userId) {
+            res.status(403).json({
+                message: "Unauthorized Access"
+            });
+            return;
+        }
+        if (!file.sharedWith.includes(email)) {
+            file.sharedWith.push(email);
+        }
+        yield file.save();
+    }
+    catch (error) {
+        console.error(error);
+    }
+});
+exports.shareFile = shareFile;
+const getSharedFiles = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userEmail = req.user.email;
+        const files = yield file_model_1.default.find({ sharedWith: userEmail });
+        res.status(200).json({
+            message: "All Shared Files",
+            files
+        });
+    }
+    catch (error) {
+        console.error(error);
+    }
+});
+exports.getSharedFiles = getSharedFiles;

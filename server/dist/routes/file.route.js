@@ -10,4 +10,5 @@ const fileRouter = (0, express_1.Router)();
 fileRouter.post('/upload', user_middleware_1.default, file_controller_1.fileUpload);
 fileRouter.get('/all', user_middleware_1.default, file_controller_1.getAllFiles);
 fileRouter.delete('/:id', user_middleware_1.default, file_controller_1.deleteFile);
+fileRouter.post('/:id/share', user_middleware_1.default);
 exports.default = fileRouter;
