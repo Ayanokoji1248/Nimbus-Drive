@@ -21,6 +21,15 @@ const UploadFileModal = ({ setFileModal, fileModal, currentFolder }: UploadFileM
     // Handle file input
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
+            const selectedFile = e.target.files[0];
+            const MAX_SIZE = 50 * 1024 * 1024;
+
+            if (selectedFile.size > MAX_SIZE) {
+                setError("⚠️ File size cannot exceed 50 MB.");
+                setFile(null);
+                return;
+            }
+
             setFile(e.target.files[0]);
             setError("");
         }
@@ -31,8 +40,7 @@ const UploadFileModal = ({ setFileModal, fileModal, currentFolder }: UploadFileM
             setError("⚠️ Please select a file before uploading.");
             return;
         }
-        const { name, size, type } = file;
-        console.log(name, size, type)
+
         try {
             setLoading(true)
             const fileURL = await uploadFile(user?._id as string, currentFolder as string, file);
