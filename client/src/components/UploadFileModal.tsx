@@ -133,7 +133,7 @@ const UploadFileModal = ({ setFileModal, fileModal, currentFolder }: UploadFileM
                     onClick={handleSubmit}
                     className="w-full mt-5 py-2 rounded-lg font-medium text-white bg-violet-600 hover:bg-violet-700 active:scale-[0.98] transition-all cursor-pointer"
                 >
-                    Upload File
+                    {loading ? "Uploading..." : "Upload File"}
                 </button>
             </div>
         </div>

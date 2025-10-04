@@ -1,66 +1,42 @@
-import useUserStore from "../store/userStore"
-import NavBar from "../components/NavBar";
-import SideBar from "../components/SideBar";
-import FolderCard from "../components/FolderCard";
-import { CirclePlus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import FolderModal from "../components/FolderModal";
-import UploadFileModal from "../components/UploadFileModal";
-import useFolderStore from "../store/folderStore";
-import useLoadingStore from "../store/loadingStore";
-import useFileStore from "../store/fileStore";
-import FileCard from "../components/FileCard";
-import SkeletonCard from "../components/SkeletonCard";
-import { Toaster } from "react-hot-toast";
+// import useUserStore from "../store/userStore"
+import NavBar from "../components/NavBar"
+import SideBar from "../components/SideBar"
+import FolderCard from "../components/FolderCard"
+import FileCard from "../components/FileCard"
+import FolderModal from "../components/FolderModal"
+import UploadFileModal from "../components/UploadFileModal"
+import SkeletonCard from "../components/SkeletonCard"
+import useFolderStore from "../store/folderStore"
+import useFileStore from "../store/fileStore"
+import useLoadingStore from "../store/loadingStore"
+import { Toaster } from "react-hot-toast"
+import { useEffect, useState } from "react"
+import { Plus } from "lucide-react"
 
 const DashboardPage = () => {
-    const { user } = useUserStore();
+    // const { user } = useUserStore()
     const { folders, fetchFolder } = useFolderStore()
-    const { files, fetchFiles } = useFileStore();
+    const { files, fetchFiles } = useFileStore()
     const { loading, setLoading } = useLoadingStore()
 
-    const [showModal, setShowModal] = useState(false);
-    const modalRef = useRef<HTMLDivElement>(null);
-
-    const [folderModal, setFolderModal] = useState(false);
-    const [fileModal, setFileModal] = useState(false);
-
     const [currentFolder, setCurrentFolder] = useState<string | null>(null)
-
-    const [breadCrumbs, setBreadCrumbs] = useState<{ id: string | null, name: string }[]>([]);
+    const [breadCrumbs, setBreadCrumbs] = useState<{ id: string | null; name: string }[]>([])
+    const [folderModal, setFolderModal] = useState(false)
+    const [fileModal, setFileModal] = useState(false)
 
     // open folder → add crumb
-    const handleOpenFolder = (folder: { _id: string, folderName: string }) => {
-        setCurrentFolder(folder._id);
-        setBreadCrumbs((prev) => [...prev, { id: folder._id, name: folder.folderName }]);
-    };
+    const handleOpenFolder = (folder: { _id: string; folderName: string }) => {
+        setCurrentFolder(folder._id)
+        setBreadCrumbs((prev) => [...prev, { id: folder._id, name: folder.folderName }])
+    }
 
     // go back via breadcrumb
     const handleBreadcrumbClick = (id: string | null, index: number) => {
-        setCurrentFolder(id);
-        setBreadCrumbs((prev) => prev.slice(0, index + 1)); // keep only till clicked
-    };
+        setCurrentFolder(id)
+        setBreadCrumbs((prev) => prev.slice(0, index + 1))
+    }
 
-    // Close modal on outside click
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-                setShowModal(false);
-            }
-        };
-
-        if (showModal) {
-            document.addEventListener("mousedown", handleClickOutside);
-        } else {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [showModal]);
-
-    // fetch folders when folder changes
+    // fetch folders/files on folder change
     useEffect(() => {
         const fetch = async () => {
             setLoading(true)
@@ -73,125 +49,94 @@ const DashboardPage = () => {
     }, [currentFolder])
 
     return (
-        <div className="flex flex-col w-full h-screen bg-zinc-950 text-white">
-            <Toaster position="bottom-right" reverseOrder={false} />
+        <div className="flex h-screen bg-zinc-950 text-white">
+            <Toaster position="bottom-right" />
 
-            {folderModal &&
-                <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />
-            }
+            {/* Sidebar */}
+            <SideBar />
 
-            {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} currentFolder={currentFolder} />}
+            {/* Main Content Area */}
+            <div className="flex flex-1 flex-col overflow-hidden">
+                {/* Top Navbar */}
+                <NavBar />
 
-            {/* Layout container */}
-            <div className="flex flex-1">
-                {/* Sidebar */}
-                <SideBar />
-
-                {/* Main Content */}
-                <main className="flex-1 overflow-y-auto relative">
-                    <NavBar />
-                    <div className="px-6 py-2">
-                        <div className="flex justify-between items-center py-3">
-                            <h1 className="text-2xl font-semibold">
-                                Welcome, {user?.username}
-                            </h1>
-
-                            <div className="relative" ref={modalRef}>
-                                <button
-                                    onClick={() => setShowModal(!showModal)}
-                                    className="flex  gap-3 items-center bg-violet-500 p-2 px-3 text-sm font-medium rounded-md hover:bg-violet-600 transition cursor-pointer"
-                                >
-                                    <CirclePlus size={22} /> Add Item
-                                </button>
-
-                                {showModal && (
-                                    <div className="absolute right-0 mt-2 w-42 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg p-2 z-12">
-                                        <button
-                                            onClick={() => setFileModal(!fileModal)}
-                                            className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
-                                        >
-                                            Upload File
-                                        </button>
-                                        <button
-                                            onClick={() => setFolderModal(!folderModal)}
-                                            className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
-                                        >
-                                            Create Folder
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Breadcrumbs */}
-                        <div>
+                {/* Breadcrumb + Actions */}
+                <div className="flex items-center justify-between px-8 py-5 border-b border-zinc-800 bg-zinc-950">
+                    <div className="flex items-center gap-2 text-sm">
+                        <button
+                            onClick={() => {
+                                setCurrentFolder(null)
+                                setBreadCrumbs([])
+                            }}
+                            className="text-zinc-400 hover:text-violet-500 transition-colors text-md font-semibold cursor-pointer"
+                        >
+                            Home
+                        </button>
+                        {breadCrumbs.map((crumb, index) => (
                             <button
-                                onClick={() => {
-                                    setCurrentFolder(null);
-                                    setBreadCrumbs([]); // reset breadcrumbs on home
-                                }}
-                                className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
+                                key={crumb.id}
+                                onClick={() => handleBreadcrumbClick(crumb.id, index)}
+                                className="text-zinc-400 hover:text-violet-500 transition-colors text-md font-semibold cursor-pointer"
                             >
-                                /Home
+                                / {crumb.name}
                             </button>
-                            {breadCrumbs.map((crumb, index) => (
-                                <button
-                                    key={crumb.id}
-                                    onClick={() => handleBreadcrumbClick(crumb.id, index)}
-                                    className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
-                                >
-                                    /{crumb.name}
-                                </button>
+                        ))}
+                    </div>
+
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setFileModal(true)}
+                            className="flex items-center gap-2 rounded-md bg-violet-600 px-3 py-2 text-md font-medium hover:bg-violet-700 transition-colors cursor-pointer"
+                        >
+                            <Plus size={16} /> Upload File
+                        </button>
+                        <button
+                            onClick={() => setFolderModal(true)}
+                            className="flex items-center gap-2 rounded-md bg-violet-600 px-3 py-2 text-md font-medium hover:bg-violet-700 transition-colors cursor-pointer"
+                        >
+                            <Plus size={16} /> New Folder
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content Grid */}
+                <div className="flex-1 overflow-auto px-6 py-4">
+                    {loading ? (
+                        <div className="flex gap-3 flex-wrap">
+                            {[...Array(6)].map((_, i) => (
+                                <SkeletonCard key={i} />
                             ))}
                         </div>
-
-                        <div className="py-3 flex items-center gap-y-3 justify-start space-x-3 flex-wrap">
-
-                            {loading ? (
-                                // Show skeletons while fetching
-                                <div className="flex gap-3 flex-wrap">
-                                    {[...Array(6)].map((_, i) => (
-                                        <SkeletonCard key={i} />
-                                    ))}
-                                </div>
-                            ) : (
-                                <>
-                                    {(folders.length === 0 && files.length === 0) && (
-                                        <p className="text-sm font-medium text-zinc-500">
-                                            No Files or Folders.
-                                        </p>
-                                    )}
-
-                                    {folders.map((folder) => (
-                                        <div key={folder._id} onClick={() => handleOpenFolder(folder)}>
-                                            <FolderCard
-                                                id={folder._id}
-                                                name={folder.folderName}
-                                                createdAt={folder.createdAt}
-                                            />
-                                        </div>
-                                    ))}
-
-                                    {files.map((file) => (
-                                        <FileCard
-                                            key={file._id}
-                                            id={file._id}
-                                            name={file.fileName}
-                                            type={file.fileType}
-                                            size={file.fileSize}
-                                            uploadedAt={file.createdAt}
-                                            parentFolder={file.parentFolder}
-                                        />
-                                    ))}
-                                </>
-                            )}
-
-
-
+                    ) : folders.length === 0 && files.length === 0 ? (
+                        <div className="flex h-full items-center justify-center text-zinc-500 text-sm">
+                            No files or folders found.
                         </div>
-                    </div>
-                </main>
+                    ) : (
+                        <div className="flex flex-wrap gap-4">
+                            {folders.map((folder) => (
+                                <div key={folder._id} onClick={() => handleOpenFolder(folder)} className="cursor-pointer">
+                                    <FolderCard id={folder._id} name={folder.folderName} createdAt={folder.createdAt} />
+                                </div>
+                            ))}
+                            {files.map((file) => (
+                                <FileCard
+                                    key={file._id}
+                                    id={file._id}
+                                    name={file.fileName}
+                                    type={file.fileType}
+                                    size={file.fileSize}
+                                    uploadedAt={file.createdAt}
+                                    parentFolder={file.parentFolder}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
+
+            {/* Modals */}
+            {folderModal && <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />}
+            {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} currentFolder={currentFolder} />}
         </div>
     )
 }
