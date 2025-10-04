@@ -5,7 +5,7 @@ const SideBar = () => {
 
     const {clearUser} = useUserStore();
     return (
-        <div className='lg:w-72 w-20 bg-[#141414] lg:p-6 flex flex-col h-screen '>
+        <div className='lg:w-72 w-20 bg-[#141414] lg:p-6 flex flex-col justify-between h-screen'>
             {/* Top Logo */}
             <div className="group">
                 <div className="flex justify-center items-center gap-3">

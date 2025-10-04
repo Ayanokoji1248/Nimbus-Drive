@@ -82,113 +82,113 @@ const DashboardPage = () => {
 
             {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} currentFolder={currentFolder} />}
 
-            {/* Top Navbar */}
-            <NavBar />
-
             {/* Layout container */}
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1">
                 {/* Sidebar */}
                 <SideBar />
 
                 {/* Main Content */}
-                <main className="flex-1 p-6 overflow-y-auto relative">
-                    <div className="flex justify-between items-center py-3">
-                        <h1 className="text-2xl font-semibold">
-                            Welcome, {user?.username}
-                        </h1>
+                <main className="flex-1 overflow-y-auto relative">
+                    <NavBar />
+                    <div className="px-6 py-2">
+                        <div className="flex justify-between items-center py-3">
+                            <h1 className="text-2xl font-semibold">
+                                Welcome, {user?.username}
+                            </h1>
 
-                        <div className="relative" ref={modalRef}>
-                            <button
-                                onClick={() => setShowModal(!showModal)}
-                                className="flex  gap-3 items-center bg-violet-500 p-2 px-3 text-sm font-medium rounded-md hover:bg-violet-600 transition cursor-pointer"
-                            >
-                                <CirclePlus size={22} /> Add Item
-                            </button>
+                            <div className="relative" ref={modalRef}>
+                                <button
+                                    onClick={() => setShowModal(!showModal)}
+                                    className="flex  gap-3 items-center bg-violet-500 p-2 px-3 text-sm font-medium rounded-md hover:bg-violet-600 transition cursor-pointer"
+                                >
+                                    <CirclePlus size={22} /> Add Item
+                                </button>
 
-                            {showModal && (
-                                <div className="absolute right-0 mt-2 w-42 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg p-2 z-12">
-                                    <button
-                                        onClick={() => setFileModal(!fileModal)}
-                                        className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
-                                    >
-                                        Upload File
-                                    </button>
-                                    <button
-                                        onClick={() => setFolderModal(!folderModal)}
-                                        className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
-                                    >
-                                        Create Folder
-                                    </button>
-                                </div>
-                            )}
+                                {showModal && (
+                                    <div className="absolute right-0 mt-2 w-42 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg p-2 z-12">
+                                        <button
+                                            onClick={() => setFileModal(!fileModal)}
+                                            className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
+                                        >
+                                            Upload File
+                                        </button>
+                                        <button
+                                            onClick={() => setFolderModal(!folderModal)}
+                                            className="w-full text-left px-3 py-2 hover:bg-violet-600 rounded-md cursor-pointer"
+                                        >
+                                            Create Folder
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Breadcrumbs */}
-                    <div>
-                        <button
-                            onClick={() => {
-                                setCurrentFolder(null);
-                                setBreadCrumbs([]); // reset breadcrumbs on home
-                            }}
-                            className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
-                        >
-                            /Home
-                        </button>
-                        {breadCrumbs.map((crumb, index) => (
+                        {/* Breadcrumbs */}
+                        <div>
                             <button
-                                key={crumb.id}
-                                onClick={() => handleBreadcrumbClick(crumb.id, index)}
+                                onClick={() => {
+                                    setCurrentFolder(null);
+                                    setBreadCrumbs([]); // reset breadcrumbs on home
+                                }}
                                 className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
                             >
-                                /{crumb.name}
+                                /Home
                             </button>
-                        ))}
-                    </div>
+                            {breadCrumbs.map((crumb, index) => (
+                                <button
+                                    key={crumb.id}
+                                    onClick={() => handleBreadcrumbClick(crumb.id, index)}
+                                    className="text-sm text-zinc-400 hover:text-violet-500 cursor-pointer transition-all"
+                                >
+                                    /{crumb.name}
+                                </button>
+                            ))}
+                        </div>
 
-                    <div className="py-3 flex items-center gap-y-3 justify-start space-x-3 flex-wrap">
+                        <div className="py-3 flex items-center gap-y-3 justify-start space-x-3 flex-wrap">
 
-                        {loading ? (
-                            // Show skeletons while fetching
-                            <div className="flex gap-3 flex-wrap">
-                                {[...Array(6)].map((_, i) => (
-                                    <SkeletonCard key={i} />
-                                ))}
-                            </div>
-                        ) : (
-                            <>
-                                {(folders.length === 0 && files.length === 0) && (
-                                    <p className="text-sm font-medium text-zinc-500">
-                                        No Files or Folders.
-                                    </p>
-                                )}
+                            {loading ? (
+                                // Show skeletons while fetching
+                                <div className="flex gap-3 flex-wrap">
+                                    {[...Array(6)].map((_, i) => (
+                                        <SkeletonCard key={i} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <>
+                                    {(folders.length === 0 && files.length === 0) && (
+                                        <p className="text-sm font-medium text-zinc-500">
+                                            No Files or Folders.
+                                        </p>
+                                    )}
 
-                                {folders.map((folder) => (
-                                    <div key={folder._id} onClick={() => handleOpenFolder(folder)}>
-                                        <FolderCard
-                                            id={folder._id}
-                                            name={folder.folderName}
-                                            createdAt={folder.createdAt}
+                                    {folders.map((folder) => (
+                                        <div key={folder._id} onClick={() => handleOpenFolder(folder)}>
+                                            <FolderCard
+                                                id={folder._id}
+                                                name={folder.folderName}
+                                                createdAt={folder.createdAt}
+                                            />
+                                        </div>
+                                    ))}
+
+                                    {files.map((file) => (
+                                        <FileCard
+                                            key={file._id}
+                                            id={file._id}
+                                            name={file.fileName}
+                                            type={file.fileType}
+                                            size={file.fileSize}
+                                            uploadedAt={file.createdAt}
+                                            parentFolder={file.parentFolder}
                                         />
-                                    </div>
-                                ))}
-
-                                {files.map((file) => (
-                                    <FileCard
-                                        key={file._id}
-                                        id={file._id}
-                                        name={file.fileName}
-                                        type={file.fileType}
-                                        size={file.fileSize}
-                                        uploadedAt={file.createdAt}
-                                        parentFolder={file.parentFolder}
-                                    />
-                                ))}
-                            </>
-                        )}
+                                    ))}
+                                </>
+                            )}
 
 
 
+                        </div>
                     </div>
                 </main>
             </div>
