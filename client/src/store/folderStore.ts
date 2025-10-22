@@ -15,7 +15,6 @@ const useFolderStore = create<folderStoreType>((set) => ({
     fetchFolder: async (currentFolder) => {
         try {
             const response = await axios.get(`${BACKEND_URL}/folder?parentFolder=${currentFolder}`, { withCredentials: true })
-            console.log(response.data);
             set({ folders: response.data.folders })
         } catch (error) {
             console.error(error)
@@ -45,8 +44,7 @@ const useFolderStore = create<folderStoreType>((set) => ({
                 folders: state.folders.filter((folder) => folder._id != folderId)
             }))
 
-            const response = await axios.delete(`${BACKEND_URL}/folder/${folderId}`, { withCredentials: true });
-            console.log(response.data);
+            await axios.delete(`${BACKEND_URL}/folder/${folderId}`, { withCredentials: true });
 
 
 

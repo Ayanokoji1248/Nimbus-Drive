@@ -4,6 +4,9 @@ import LoginPage from "./pages/LoginPage"
 import DashboardPage from "./pages/DashboardPage"
 import ProtectedRoutes from "./components/ProtectedRoutes"
 import HomePage from "./pages/HomePage"
+import SharePage from "./pages/SharePage"
+import MainLayout from "./layouts/MainLayout"
+import SearchPage from "./pages/SearchPage"
 
 const App = () => {
   return (
@@ -15,7 +18,11 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
 
       <Route element={<ProtectedRoutes />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/share-with-me" element={<SharePage />} />
+        </Route>
       </Route>
     </Routes>
   )

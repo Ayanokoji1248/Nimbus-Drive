@@ -17,7 +17,6 @@ const useFileStore = create<fileStoreType>((set) => ({
     fetchFiles: async (currentFolder) => {
         try {
             const response = await axios.get(`${BACKEND_URL}/file/all?parentFolder=${currentFolder}`, { withCredentials: true })
-            console.log(response.data)
             set({ files: response.data.files });
         } catch (error) {
             console.error(error);

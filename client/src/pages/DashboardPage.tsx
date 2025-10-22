@@ -1,6 +1,6 @@
 // import useUserStore from "../store/userStore"
-import NavBar from "../components/NavBar"
-import SideBar from "../components/SideBar"
+// import NavBar from "../components/NavBar"
+// import SideBar from "../components/SideBar"
 import FolderCard from "../components/FolderCard"
 import FileCard from "../components/FileCard"
 import FolderModal from "../components/FolderModal"
@@ -9,7 +9,7 @@ import SkeletonCard from "../components/SkeletonCard"
 import useFolderStore from "../store/folderStore"
 import useFileStore from "../store/fileStore"
 import useLoadingStore from "../store/loadingStore"
-import { Toaster } from "react-hot-toast"
+// import { Toaster } from "react-hot-toast"
 import { useEffect, useState } from "react"
 import { Plus } from "lucide-react"
 
@@ -49,39 +49,14 @@ const DashboardPage = () => {
     }, [currentFolder])
 
     return (
-        <div className="flex h-screen bg-zinc-950 text-white">
-            <Toaster position="bottom-right" />
 
-            {/* Sidebar */}
-            <SideBar />
-
-            {/* Main Content Area */}
+        <>
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* Top Navbar */}
-                <NavBar />
+                {/* <NavBar /> */}
 
                 {/* Breadcrumb + Actions */}
-                <div className="flex items-center justify-between px-8 py-5 border-b border-zinc-800 bg-zinc-950">
-                    <div className="flex items-center gap-2 text-sm">
-                        <button
-                            onClick={() => {
-                                setCurrentFolder(null)
-                                setBreadCrumbs([])
-                            }}
-                            className="text-zinc-400 hover:text-violet-500 transition-colors text-md font-semibold cursor-pointer"
-                        >
-                            Home
-                        </button>
-                        {breadCrumbs.map((crumb, index) => (
-                            <button
-                                key={crumb.id}
-                                onClick={() => handleBreadcrumbClick(crumb.id, index)}
-                                className="text-zinc-400 hover:text-violet-500 transition-colors text-md font-semibold cursor-pointer"
-                            >
-                                / {crumb.name}
-                            </button>
-                        ))}
-                    </div>
+                <div className="flex items-center justify-end px-8 py-5 border-b border-zinc-800 bg-zinc-950 ">
 
                     <div className="flex gap-2">
                         <button
@@ -97,6 +72,27 @@ const DashboardPage = () => {
                             <Plus size={16} /> New Folder
                         </button>
                     </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm py-4 px-8 ">
+                    <button
+                        onClick={() => {
+                            setCurrentFolder(null)
+                            setBreadCrumbs([])
+                        }}
+                        className="text-zinc-400 hover:text-violet-500 transition-colors text-md font-semibold cursor-pointer"
+                    >
+                        Home
+                    </button>
+                    {breadCrumbs.map((crumb, index) => (
+                        <button
+                            key={crumb.id}
+                            onClick={() => handleBreadcrumbClick(crumb.id, index)}
+                            className="text-zinc-400 hover:text-violet-500 transition-colors text-md font-semibold cursor-pointer"
+                        >
+                            / {crumb.name}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Content Grid */}
@@ -137,7 +133,8 @@ const DashboardPage = () => {
             {/* Modals */}
             {folderModal && <FolderModal setFolderModal={setFolderModal} folderModal={folderModal} currentFolder={currentFolder} />}
             {fileModal && <UploadFileModal setFileModal={setFileModal} fileModal={fileModal} currentFolder={currentFolder} />}
-        </div>
+        </>
+
     )
 }
 

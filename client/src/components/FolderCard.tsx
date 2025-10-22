@@ -1,4 +1,4 @@
-import { Folder, MoreVertical, Trash2, Pencil } from "lucide-react";
+import { Folder, MoreVertical, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import useFolderStore from "../store/folderStore";
 
@@ -74,15 +74,6 @@ const FolderCard = ({ id, name, createdAt }: FolderProps) => {
 
                 {menuOpen && (
                     <div className="absolute right-0 mt-2 w-40 bg-[#1E1E1E] border border-zinc-700 rounded-lg shadow-lg overflow-hidden z-20">
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setMenuOpen(false);
-                            }}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800 transition"
-                        >
-                            <Pencil size={16} /> Rename
-                        </button>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
