@@ -6,7 +6,7 @@ const SideBar = () => {
 
     const { clearUser } = useUserStore();
     return (
-        <div className='lg:w-72 w-20 bg-[#141414] lg:p-6 flex flex-col justify-between h-screen border-r-[1px] border-zinc-800'>
+        <div className='lg:w-72 w-20 bg-[#141414] lg:p-6 py-5 flex flex-col justify-between h-screen border-r-[1px] border-zinc-800'>
             {/* Top Logo */}
             <div className="flex flex-col">
                 <div className="group">
@@ -24,15 +24,16 @@ const SideBar = () => {
 
 
                 <div className="flex flex-col p-4 mt-5 ">
-                    <h1 className="w-fit font-semibold text-lg hover:bg-zinc-800 transtion-all duration-300 p-3 rounded-full flex cursor-pointer items-center gap-4"><Home /> Home</h1>
-                    <Link to={'/search'} className="w-fit font-semibold text-lg hover:bg-zinc-800 transtion-all duration-300 p-3 rounded-full flex cursor-pointer items-center gap-4"><Search /> Search</Link>
-                    <h1 className="w-fit font-semibold text-lg hover:bg-zinc-800 transtion-all duration-300 p-3 rounded-full flex cursor-pointer items-center gap-4"><Share /> Share with me</h1>
+                    <Link to={'/dashboard'} className="w-fit font-semibold text-lg hover:bg-zinc-800 transtion-all duration-300 p-3 rounded-full flex cursor-pointer items-center gap-4"><Home /> <span className="hidden lg:flex">Home</span></Link>
+                    <Link to={'/search'} className="w-fit font-semibold text-lg hover:bg-zinc-800 transtion-all duration-300 p-3 rounded-full flex cursor-pointer items-center gap-4"><Search /> <span className="hidden lg:flex">Search</span></Link>
+                    <Link to={'/share-with-me'} className="w-fit flex font-semibold text-lg hover:bg-zinc-800 transtion-all duration-300 p-3 rounded-full  cursor-pointer items-center gap-4"><Share />
+                        <span className="hidden lg:flex">Share with me</span></Link>
 
                 </div>
             </div>
 
             {/* Logout Button */}
-            <button onClick={clearUser} className="flex justify-center lg:justify-start mt-6 cursor-pointer hover:bg-red-700/20 p-3 rounded-lg items-center gap-3">
+            <button onClick={clearUser} className="flex justify-center lg:justify-start cursor-pointer hover:bg-red-700/20 p-3 rounded-lg items-center gap-3">
                 <LogOut size={20} className="text-red-500" />
                 <span className="hidden lg:block text-red-500 font-semibold">Logout</span>
             </button>

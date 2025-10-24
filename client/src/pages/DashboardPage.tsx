@@ -1,6 +1,3 @@
-// import useUserStore from "../store/userStore"
-// import NavBar from "../components/NavBar"
-// import SideBar from "../components/SideBar"
 import FolderCard from "../components/FolderCard"
 import FileCard from "../components/FileCard"
 import FolderModal from "../components/FolderModal"
@@ -12,9 +9,10 @@ import useLoadingStore from "../store/loadingStore"
 // import { Toaster } from "react-hot-toast"
 import { useEffect, useState } from "react"
 import { Plus } from "lucide-react"
+import useUserStore from "../store/userStore"
 
 const DashboardPage = () => {
-    // const { user } = useUserStore()
+    const { user } = useUserStore()
     const { folders, fetchFolder } = useFolderStore()
     const { files, fetchFiles } = useFileStore()
     const { loading, setLoading } = useLoadingStore()
@@ -51,28 +49,48 @@ const DashboardPage = () => {
     return (
 
         <>
-            <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="flex flex-1 flex-col overflow-hidden" id="root">
                 {/* Top Navbar */}
                 {/* <NavBar /> */}
 
-                {/* Breadcrumb + Actions */}
-                <div className="flex items-center justify-end px-8 py-5 border-b border-zinc-800 bg-zinc-950 ">
 
-                    <div className="flex gap-2">
+                {/* Breadcrumb + Actions */}
+                <div
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between 
+             gap-4 sm:gap-0 px-4 sm:px-8 py-4 sm:py-5 
+             border-b border-zinc-800 bg-zinc-950"
+                >
+                    {/* Left Section */}
+                    <div>
+                        <h1 className="capitalize text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                            Welcome {user?.username}
+                        </h1>
+                    </div>
+
+                    {/* Right Section */}
+                    <div className="flex flex-col sm:flex-row w-full sm:w-auto items-stretch sm:items-center gap-3">
                         <button
                             onClick={() => setFileModal(true)}
-                            className="flex items-center gap-2 rounded-md bg-violet-600 px-3 py-2 text-md font-medium hover:bg-violet-700 transition-colors cursor-pointer"
+                            className="flex items-center justify-center gap-2 rounded-md bg-violet-600 
+                 px-4 py-2 text-sm sm:text-md font-medium 
+                 hover:bg-violet-700 transition-colors cursor-pointer 
+                 w-full sm:w-auto"
                         >
                             <Plus size={16} /> Upload File
                         </button>
+
                         <button
                             onClick={() => setFolderModal(true)}
-                            className="flex items-center gap-2 rounded-md bg-violet-600 px-3 py-2 text-md font-medium hover:bg-violet-700 transition-colors cursor-pointer"
+                            className="flex items-center justify-center gap-2 rounded-md bg-violet-600 
+                 px-4 py-2 text-sm sm:text-md font-medium 
+                 hover:bg-violet-700 transition-colors cursor-pointer 
+                 w-full sm:w-auto"
                         >
                             <Plus size={16} /> New Folder
                         </button>
                     </div>
                 </div>
+
 
                 <div className="flex items-center gap-2 text-sm py-4 px-8 ">
                     <button

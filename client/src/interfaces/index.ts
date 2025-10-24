@@ -13,5 +13,10 @@ export interface fileProp {
     fileUrl: string,
     createdAt: string,
     parentFolder?: string,
+    user: {
+        _id: string,
+        username: string,
+        email: string,
+    }
 }
 

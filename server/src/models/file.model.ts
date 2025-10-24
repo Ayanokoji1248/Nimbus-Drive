@@ -15,7 +15,8 @@ const fileSchema = new Schema({
         ref: "user"
     },
     sharedWith: [{
-        type: String
+        type: String,
+        index: true 
     }]
 }, { timestamps: true })
 

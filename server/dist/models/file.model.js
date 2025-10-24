@@ -49,7 +49,8 @@ const fileSchema = new mongoose_1.Schema({
         ref: "user"
     },
     sharedWith: [{
-            type: String
+            type: String,
+            index: true
         }]
 }, { timestamps: true });
 const File = (0, mongoose_1.model)('file', fileSchema);

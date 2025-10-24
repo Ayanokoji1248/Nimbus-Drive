@@ -1,8 +1,9 @@
-import { FileText, Image, Video, Music, MoreVertical, Download, Trash2 } from "lucide-react";
+import { FileText, Image, Video, Music, MoreVertical, Download, Trash2, Share } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import useFileStore from "../store/fileStore";
 import downloadFile from "../utils/downloadFile";
 import useUserStore from "../store/userStore";
+import ShareModel from "./ShareModel";
 
 type FileProps = {
     id: string;
@@ -19,6 +20,8 @@ const FileCard = ({ id, name, type, size, uploadedAt, parentFolder }: FileProps)
 
     const { removeFile } = useFileStore();
     const { user } = useUserStore()
+
+    const [shareModal, setShareModal] = useState(false)
 
 
     // Close menu if clicked outside
@@ -115,9 +118,19 @@ const FileCard = ({ id, name, type, size, uploadedAt, parentFolder }: FileProps)
                         >
                             <Trash2 size={16} /> Delete
                         </button>
+                        <button className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-zinc-700" onClick={() => setShareModal(!shareModal)}>
+                            <Share size={16} /> Share
+                        </button>
                     </div>
                 )}
             </div>
+            {shareModal &&
+                <ShareModel
+                    setShareModal={setShareModal}
+                    shareModal={shareModal}
+                    fileId={id}
+                />
+            }
         </div>
     );
 };

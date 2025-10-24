@@ -1,6 +1,7 @@
 import e, { Request, Response, NextFunction } from "express";
 import File from "../models/file.model";
 import deleteFromSupabase from "../lib/supabaseDelete";
+import { string } from "zod";
 
 export const fileUpload = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -109,8 +110,23 @@ export const shareFile = async (req: Request, res: Response, next: NextFunction)
     try {
 
         const userId = req.user.id;
+        const userEmail = req.user.email
         const { email } = req.body;
         const fileId = req.params.id
+
+        if (!email || !email.includes("@")) {
+            res.status(400).json({
+                message: "Invalid Email Id"
+            })
+            return
+        }
+
+        if (email === userEmail) {
+            res.status(400).json({
+                message: "Cannot share with yourself"
+            })
+            return
+        }
 
         const file = await File.findById(fileId);
 
@@ -133,10 +149,18 @@ export const shareFile = async (req: Request, res: Response, next: NextFunction)
         }
 
         await file.save()
+        res.status(200).json({
+            message: "File Shared Successfully",
+
+        })
 
 
     } catch (error) {
         console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+        return
     }
 }
 
@@ -144,7 +168,7 @@ export const getSharedFiles = async (req: Request, res: Response, next: NextFunc
     try {
         const userEmail = req.user.email;
 
-        const files = await File.find({ sharedWith: userEmail });
+        const files = await File.find({ sharedWith: userEmail }).populate("user", "_id username email");
 
         res.status(200).json({
             message: "All Shared Files",
@@ -153,5 +177,39 @@ export const getSharedFiles = async (req: Request, res: Response, next: NextFunc
 
     } catch (error) {
         console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+        return
+    }
+}
+
+export const searchFile = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user.id
+        const { q } = req.query;
+
+        if (!q || typeof q !== 'string') {
+            res.status(400).json({
+                message: "Search query is required"
+            })
+            return
+        }
+
+        const files = await File.find({
+            $or: [{ fileName: { $regex: q, $options: "i" } }],
+            user: userId
+        })
+
+        res.status(200).json({
+            files
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+        return
     }
 }

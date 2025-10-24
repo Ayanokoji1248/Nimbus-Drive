@@ -1,4 +1,3 @@
-import type React from "react"
 import SideBar from "../components/SideBar"
 import { Toaster } from "react-hot-toast"
 import { Outlet } from "react-router-dom"

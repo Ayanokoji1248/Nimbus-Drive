@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSharedFiles = exports.shareFile = exports.deleteFile = exports.getAllFiles = exports.fileUpload = void 0;
+exports.searchFile = exports.getSharedFiles = exports.shareFile = exports.deleteFile = exports.getAllFiles = exports.fileUpload = void 0;
 const file_model_1 = __importDefault(require("../models/file.model"));
 const supabaseDelete_1 = __importDefault(require("../lib/supabaseDelete"));
 const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -102,8 +102,21 @@ const shareFile = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     var _a;
     try {
         const userId = req.user.id;
+        const userEmail = req.user.email;
         const { email } = req.body;
         const fileId = req.params.id;
+        if (!email || !email.includes("@")) {
+            res.status(400).json({
+                message: "Invalid Email Id"
+            });
+            return;
+        }
+        if (email === userEmail) {
+            res.status(400).json({
+                message: "Cannot share with yourself"
+            });
+            return;
+        }
         const file = yield file_model_1.default.findById(fileId);
         if (!file) {
             res.status(404).json({
@@ -121,16 +134,23 @@ const shareFile = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             file.sharedWith.push(email);
         }
         yield file.save();
+        res.status(200).json({
+            message: "File Shared Successfully",
+        });
     }
     catch (error) {
         console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+        return;
     }
 });
 exports.shareFile = shareFile;
 const getSharedFiles = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userEmail = req.user.email;
-        const files = yield file_model_1.default.find({ sharedWith: userEmail });
+        const files = yield file_model_1.default.find({ sharedWith: userEmail }).populate("user", "_id username email");
         res.status(200).json({
             message: "All Shared Files",
             files
@@ -138,6 +158,37 @@ const getSharedFiles = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
     catch (error) {
         console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+        return;
     }
 });
 exports.getSharedFiles = getSharedFiles;
+const searchFile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.user.id;
+        const { q } = req.query;
+        if (!q || typeof q !== 'string') {
+            res.status(400).json({
+                message: "Search query is required"
+            });
+            return;
+        }
+        const files = yield file_model_1.default.find({
+            $or: [{ fileName: { $regex: q, $options: "i" } }],
+            user: userId
+        });
+        res.status(200).json({
+            files
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+        return;
+    }
+});
+exports.searchFile = searchFile;
