@@ -50,7 +50,12 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
         })
         await user.save();
         const token = await generateToken({ id: user._id.toString(), email: user.email })
-        res.cookie("token", token)
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true, // HTTPS only
+            sameSite: 'none', // needed for cross-site
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        });
 
         // This creates folder in supabase with userId
         await rootFolderCreate(user._id.toString());
@@ -106,7 +111,12 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
         }
 
         const token = await generateToken({ id: userExist._id.toString(), email: userExist.email })
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true, // HTTPS only
+            sameSite: 'none', // needed for cross-site
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        });
 
         const { password: _, ...userData } = userExist.toObject()
 
