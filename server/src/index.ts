@@ -12,10 +12,22 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+const allowedOrigins = [
+    "http://localhost:5173",  // local Vite dev
+    "https://nimbus-drive.vercel.app" // production frontend
+];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    credentials: true,
-}))
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true); // allow server-to-server or Postman requests
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 
 app.use('/api/auth', authRouter);
 app.use('/api/folder', folderRouter);
