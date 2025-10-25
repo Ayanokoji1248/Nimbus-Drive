@@ -14,7 +14,7 @@ const SideBar = () => {
                         <div className='p-3 bg-[#1E1E1E] w-fit rounded-xl'>
                             <CloudUpload size={30} className='text-violet-500' />
                         </div>
-                        <h1 className='text-violet-700 text-2xl hidden lg:block font-bold'>Cimbus Drive</h1>
+                        <h1 className='text-violet-700 text-2xl hidden lg:block font-bold'>Nimbus Drive</h1>
                     </div>
 
                     <div className="flex items-center justify-center mt-1">
